@@ -1,0 +1,11 @@
+.MyComponent {
+  font: verdana;
+  padding: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MyComponent-title {
+  color: #0C4B33;
+}

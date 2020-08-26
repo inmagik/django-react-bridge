@@ -1,17 +1,15 @@
 import json
-import os
 import requests
-from django.conf import settings
 from django import template
 from django.utils.safestring import mark_safe
+from react_bridge.config import JS_CONFIG, USE_JS_DEV_SERVER
 
-PRODUTION_OUTPUT_DIR = os.path.join(settings.BASE_DIR, 'react_bridge/static/react_bridge')
 DEV_SERVER_URL = 'http://localhost:9000'
 
 register = template.Library()
 
 @register.simple_tag(takes_context=True)
-def render_component(context, component_name, **props):
+def render_component(context, component_name, in_tag='div', **props):
     if component_name not in context['BRIDGED_REACT_COMPONENTS']:
         context['BRIDGED_REACT_COMPONENTS'][component_name] = []
 
@@ -21,7 +19,7 @@ def render_component(context, component_name, **props):
         'props': props,
     })
 
-    return mark_safe('<div id="' + tag_id + '"></div>')
+    return mark_safe(f'<{in_tag} id="{tag_id}"></{in_tag}>')
 
 
 def js_render_component(component_name, tag_id, props):
@@ -32,17 +30,17 @@ def js_render_component(component_name, tag_id, props):
     return js_dj_component + '.render(' + js_dom_element + ',' + js_props + ');'
 
 def make_script(filename):
-    if settings.REACT_BRIDGE_DEV:
+    if USE_JS_DEV_SERVER:
         src = DEV_SERVER_URL + '/' + filename
     else:
-        src = settings.STATIC_URL + 'react_bridge/' + filename
+        src = JS_CONFIG['output_url'] + filename
     return '<script type="text/javascript" src="' + src +'"></script>'
 
 def make_style(filename):
-    if settings.REACT_BRIDGE_DEV:
+    if USE_JS_DEV_SERVER:
         href = DEV_SERVER_URL + '/' + filename
     else:
-        href = settings.STATIC_URL + 'react_bridge/' + filename
+        href = JS_CONFIG['output_url'] + filename
     return '<link rel="stylesheet" href="' + href +'"></script>'
 
 def get_body_files_from_manifest(manifest, entry):
@@ -76,12 +74,11 @@ def get_head_files_from_manifest(manifest, entry):
 @register.simple_tag(takes_context=True)
 def react_body_tags(context, entry='main'):
     # Generate the correct files my entry point
-    if settings.REACT_BRIDGE_DEV:
+    if USE_JS_DEV_SERVER:
         r = requests.get(DEV_SERVER_URL + '/manifest.json')
         manifest = r.json()
     else:
-        PRODUTION_OUTPUT_DIR = os.path.join(settings.BASE_DIR, 'react_bridge/static/react_bridge')
-        with open(PRODUTION_OUTPUT_DIR + '/manifest.json') as f:
+        with open(JS_CONFIG['output_path'] + '/manifest.json') as f:
             manifest = json.loads(f.read())
 
     files = get_body_files_from_manifest(manifest, entry)
@@ -106,12 +103,11 @@ def react_body_tags(context, entry='main'):
 @register.simple_tag(takes_context=True)
 def react_head_tags(context, entry='main'):
     # Generate the correct files my entry point
-    if settings.REACT_BRIDGE_DEV:
+    if USE_JS_DEV_SERVER:
         # Loaded by webpack using JS
         return ''
     else:
-        PRODUTION_OUTPUT_DIR = os.path.join(settings.BASE_DIR, 'react_bridge/static/react_bridge')
-        with open(PRODUTION_OUTPUT_DIR + '/manifest.json') as f:
+        with open(JS_CONFIG['output_path'] + '/manifest.json') as f:
             manifest = json.loads(f.read())
 
     files = get_head_files_from_manifest(manifest, entry)

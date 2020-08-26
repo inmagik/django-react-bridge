@@ -1,6 +1,7 @@
 include LICENSE
 include README.md
-recursive-include react_bridge/static .gitignore
 recursive-include react_bridge/management *.py
 recursive-include react_bridge/jsbundler *
+recursive-exclude react_bridge/jsbundler/node_modules *
+recursive-include react_bridge/starter_js *
 recursive-exclude react_bridge/jsbundler/node_modules *

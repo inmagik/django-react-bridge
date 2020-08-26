@@ -44,7 +44,7 @@ module.exports = {
   resolve: {
     ...djangoBridgeConfig.resolve,
     alias: {
-      'react-django-bridge': path.resolve('./bridge.js'),
+      'django-react-bridge': path.resolve('./bridge.js'),
       ...((djangoBridgeConfig.resolve || {}).alias || {}),
     },
   },
