@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="django-react-bridge",
-    version="0.0.2",
+    version="0.0.3",
     author="Giovanni Fumagalli",
     author_email="giovanni.fumagalli@inmagik.com",
     description="A React bridge for Django",
