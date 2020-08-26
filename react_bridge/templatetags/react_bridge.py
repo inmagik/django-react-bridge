@@ -30,18 +30,10 @@ def js_render_component(component_name, tag_id, props):
     return js_dj_component + '.render(' + js_dom_element + ',' + js_props + ');'
 
 def make_script(filename):
-    if USE_JS_DEV_SERVER:
-        src = DEV_SERVER_URL + '/' + filename
-    else:
-        src = JS_CONFIG['output_url'] + filename
-    return '<script type="text/javascript" src="' + src +'"></script>'
+    return '<script type="text/javascript" src="' + filename +'"></script>'
 
 def make_style(filename):
-    if USE_JS_DEV_SERVER:
-        href = DEV_SERVER_URL + '/' + filename
-    else:
-        href = JS_CONFIG['output_url'] + filename
-    return '<link rel="stylesheet" href="' + href +'"></script>'
+    return '<link rel="stylesheet" href="' + filename +'"></script>'
 
 def get_body_files_from_manifest(manifest, entry):
     names = list(manifest.keys())

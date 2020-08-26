@@ -17,6 +17,5 @@ class Command(BaseCommand):
         conf = json.dumps(JS_CONFIG)
         current_env = os.environ.copy()
         current_env['REACT_BRIDGE_JS_CONFIG'] = conf
-        current_env['REACT_BRIDGE_PRODUCTION_OUTPUT'] = JS_CONFIG['output_path']
         run_npm_command(['install'], cwd=BUNDLER_DIR)
         run_npm_command(['build'], env=current_env, cwd=BUNDLER_DIR)
