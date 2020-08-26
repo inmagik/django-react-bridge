@@ -14,7 +14,7 @@ Add `react_bridge` to the installed apps:
 ```py
 INSTALLED_APPS = (
     # ...
-    'react_brdige',
+    'react_bridge',
 )
 ```
 
