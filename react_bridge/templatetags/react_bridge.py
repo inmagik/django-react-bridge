@@ -8,6 +8,22 @@ DEV_SERVER_URL = 'http://localhost:9000'
 
 register = template.Library()
 
+cached_manifest = None
+def lazy_load_manifest():
+    # On JS DEV always fetch fresh manifest from js dev server
+    if USE_JS_DEV_SERVER:
+        r = requests.get(DEV_SERVER_URL + '/manifest.json')
+        return r.json()
+
+    # When manifest is write (on production build)
+    # store last readed manifest in memory
+    global cached_manifest
+    if cached_manifest is not None:
+        return cached_manifest
+    with open(JS_CONFIG['output_path'] + '/manifest.json') as f:
+        cached_manifest = json.loads(f.read())
+    return cached_manifest
+
 @register.simple_tag(takes_context=True)
 def render_component(context, component_name, in_tag='div', **props):
     if component_name not in context['BRIDGED_REACT_COMPONENTS']:
@@ -65,14 +81,8 @@ def get_head_files_from_manifest(manifest, entry):
 
 @register.simple_tag(takes_context=True)
 def react_body_tags(context, entry='main'):
-    # Generate the correct files my entry point
-    if USE_JS_DEV_SERVER:
-        r = requests.get(DEV_SERVER_URL + '/manifest.json')
-        manifest = r.json()
-    else:
-        with open(JS_CONFIG['output_path'] + '/manifest.json') as f:
-            manifest = json.loads(f.read())
-
+    # Generate the correct files for my entry point
+    manifest = lazy_load_manifest()
     files = get_body_files_from_manifest(manifest, entry)
 
     out = ''
@@ -94,14 +104,12 @@ def react_body_tags(context, entry='main'):
 
 @register.simple_tag(takes_context=True)
 def react_head_tags(context, entry='main'):
-    # Generate the correct files my entry point
+    # Loaded by webpack using JS
     if USE_JS_DEV_SERVER:
-        # Loaded by webpack using JS
         return ''
-    else:
-        with open(JS_CONFIG['output_path'] + '/manifest.json') as f:
-            manifest = json.loads(f.read())
 
+    # Generate the correct files for my entry point
+    manifest = lazy_load_manifest()
     files = get_head_files_from_manifest(manifest, entry)
 
     out = ''
