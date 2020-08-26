@@ -7,6 +7,7 @@ registerComponents({
   React,
   ReactDOM,
   components: {
+    // Register here yuor components
     MyComponent,
   }
 })
