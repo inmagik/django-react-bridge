@@ -40,7 +40,7 @@ Configure react bridge:
 REACT_BRIDGE_JS_CONFIG = {
     'use_yarn': True,
     'npm_command': 'yarn',
-    'output_path': os.path.join(settings.BASE_DIR, 'static/build'),
+    'output_path': os.path.join(BASE_DIR, 'static/build'),
     'output_url': '/static/build/',
 
      # Webpack resolve: https://webpack.js.org/configuration/resolve/#resolve
@@ -49,7 +49,7 @@ REACT_BRIDGE_JS_CONFIG = {
     # Webpack entry: https://webpack.js.org/configuration/entry-context/#entry
     'entry': None,
      # Es:.
-    'entry': os.path.join(settings.BASE_DIR, 'js/src/index.js'),
+    'entry': os.path.join(BASE_DIR, 'js/src/index.js'),
 }
 
 # Use js bridge in dev mode
@@ -112,8 +112,8 @@ If you need to split your app in multiple bundles:
 ```python
 REACT_BRIDGE_JS_CONFIG = {
     'entry': {
-      'frontend': os.path.join(settings.BASE_DIR, 'front/src/index.js'),
-      'admin': os.path.join(settings.BASE_DIR, 'admin/src/index.js'),
+      'frontend': os.path.join(BASE_DIR, 'front/src/index.js'),
+      'admin': os.path.join(BASE_DIR, 'admin/src/index.js'),
     }
 }
 ```
