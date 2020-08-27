@@ -13,5 +13,10 @@ class Command(BaseCommand):
         conf = json.dumps(JS_CONFIG)
         current_env = os.environ.copy()
         current_env['REACT_BRIDGE_JS_CONFIG'] = conf
-        run_npm_command(['install'], cwd=BUNDLER_DIR)
-        run_npm_command(['start'], env=current_env, cwd=BUNDLER_DIR)
+        run_npm_command(['install'], cwd=JS_CONFIG['package_json_path'])
+        dev_config_file = os.path.join(BUNDLER_DIR, 'webpack.dev.js')
+        run_npm_command(
+            ['run', 'webpack-dev-server', '--config', dev_config_file],
+            env=current_env,
+            cwd=JS_CONFIG['package_json_path']
+        )

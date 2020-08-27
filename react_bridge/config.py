@@ -1,11 +1,11 @@
-import os
 from django.conf import settings
 
 DEFAULT_JS_CONFIG = {
     'use_yarn': True,
     'npm_command': 'yarn',
-    'output_path': os.path.join(settings.BASE_DIR, 'static/build'),
-    'output_url': '/static/build/',
+    'package_json_path': None,
+    'output_path': None,
+    'output_url': None,
     'resolve': None,
     'entry': None,
 }
