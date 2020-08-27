@@ -44,6 +44,9 @@ REACT_BRIDGE_JS_CONFIG = {
     # Path of your npm_command or yarn command according to use_yarn default: yarn
     'npm_command': '/bin/path/to/my/yarn/or/npm',
 
+    # Path of package json where js is installed default: None your should configure your own
+    'package_json_path': os.path.join(BASE_DIR, 'js'),
+
     # Path of bundler output default: None your should configure your own
     'output_path': os.path.join(BASE_DIR, 'static/build'),
 
