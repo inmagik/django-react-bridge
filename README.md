@@ -38,25 +38,37 @@ Configure react bridge:
 
 ```python
 REACT_BRIDGE_JS_CONFIG = {
+    # Should use yarn or npm? default: True
     'use_yarn': True,
-    'npm_command': 'yarn',
+
+    # Path of your npm_command or yarn command according to use_yarn default: yarn
+    'npm_command': '/bin/path/to/my/yarn/or/npm',
+
+    # Path of bundler output default: None your should configure your own
     'output_path': os.path.join(BASE_DIR, 'static/build'),
+
+    # Url where the bundler output is server default: None your should configure your own
     'output_url': '/static/build/',
 
-     # Webpack resolve: https://webpack.js.org/configuration/resolve/#resolve
-    'resolve': None,
-
     # Webpack entry: https://webpack.js.org/configuration/entry-context/#entry
-    'entry': None,
-     # Es:.
+    # default: None
     'entry': os.path.join(BASE_DIR, 'js/src/index.js'),
+
+    # Webpack resolve: https://webpack.js.org/configuration/resolve/#resolve
+    # default: None
+    'resolve': {
+      'alias': {
+        '@components': os.path.join(BASE_DIR, 'shared/components'),
+      }
+    },
+
 }
 
 # Use js bridge in dev mode
 REACT_BRIDGE_DEV = True
 ```
 
-To use `django-react-bridge` with the default configuration you should
+To use `django-react-bridge` in non standard paths you should
 include your top static in your `STATICFILES_DIRS` or your can change
 `output_path` according to your staticfile configuration.
 
@@ -66,6 +78,16 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 ```
+
+To install al required node packages needs to run `django-react-bridge` run:
+
+```sh
+python manage.py jsinit path/to/my/js/project
+```
+
+This commands install all for you and when finished print on console a base
+`REACT_BRIDGE_JS_CONFIG` with adjusted path related to initial given project path.
+
 
 ## Usage
 
@@ -133,6 +155,11 @@ Then in your template you need to pass the bundle name when render related tags:
 ```
 
 ## Commands
+
+**NOTE:**
+
+Before run these commands you should run `jsinit` to install al relative
+packages needed to run js build tools.
 
 ### jsdevserver
 
